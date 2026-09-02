@@ -1,0 +1,25 @@
+@import '@npm-questionpro/wick-ui-lib/dist/style.css';
+@import '@npm-questionpro/wick-ui-icon/dist/wu-icon.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App base – leverage WickUI CSS variables + Tailwind */
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: 'Fira Sans', sans-serif;
+  background: var(--wu-bg, #fff);
+  color: var(--wu-fg, #1a1a1a);
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

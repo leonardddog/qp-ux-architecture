@@ -23,3 +23,26 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* Fix workspace avatar alignment — center 20px avatar within 32px button and prevent clipping */
+.workspace-item [data-sidebar='menu-button'] {
+  overflow: visible !important;
+}
+
+.workspace-item [data-sidebar='menu-button'] > div {
+  overflow: visible !important;
+  gap: 0.25rem !important; /* wu-gap-1 between avatar and workspace text */
+}
+
+.workspace-item [data-sidebar='menu-button'] > div > div.wu-relative {
+  right: 2px !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Nudge avatar to perfect center (was 2px right / 1px up vs Home icon) */
+.workspace-item span[style*='20px'] {
+  transform: translateY(0.5px) !important;
+}

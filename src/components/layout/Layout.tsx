@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   WuAppHeader,
+  WuButton,
   WuFooter,
   WuSidebar,
   WuSidebarContent,
@@ -9,6 +11,8 @@ import {
   WuSidebarItem,
   WuSidebarMenu,
 } from '@npm-questionpro/wick-ui-lib';
+import { WorkspaceAvatar } from '@/components/common/WorkspaceAvatar';
+import { LabSettingsPanel } from '../lab/LabSettingsPanel';
 
 const categories = [
   {
@@ -28,11 +32,35 @@ const categories = [
 
 const navItems = [
   { to: '/', label: 'Home', icon: 'wm-home' },
-  { to: '/about', label: 'About', icon: 'wc-analytics' },
 ] as const;
 
 export function Layout() {
   const location = useLocation();
+  const [labOpen, setLabOpen] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('lab-settings-open') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('lab-settings-open', labOpen ? '1' : '0');
+    } catch {
+      // ignore
+    }
+    document.body.classList.toggle('lab-settings-panel-open', labOpen);
+    return () => document.body.classList.remove('lab-settings-panel-open');
+  }, [labOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && labOpen) setLabOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [labOpen]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -56,7 +84,16 @@ export function Layout() {
           Sidebar={
             <>
               <WuSidebarContent>
-                <WuSidebarGroup label="Navigation">
+                <div className="wu-flex wu-flex-col wu-gap-1">
+                  <WuSidebarMenu className="workspace-item">
+                    <WuSidebarItem
+                      Icon={<WorkspaceAvatar label="W" />}
+                      isActive={location.pathname === '/workspace'}
+                    >
+                      <Link to="/workspace">Workspace</Link>
+                    </WuSidebarItem>
+                  </WuSidebarMenu>
+
                   <WuSidebarMenu>
                     {navItems.map(item => (
                       <WuSidebarItem
@@ -68,7 +105,8 @@ export function Layout() {
                       </WuSidebarItem>
                     ))}
                   </WuSidebarMenu>
-                </WuSidebarGroup>
+                </div>
+
 
                 <WuSidebarGroup label="Resources">
                   <WuSidebarMenu>
@@ -112,12 +150,27 @@ export function Layout() {
             </main>
 
             <WuFooter>
-              <div>
+              <div className="flex w-full items-center justify-between gap-2">
                 <span>QuestionPro UX · Information architecture © {new Date().getFullYear()}</span>
+                <WuButton
+                  iconOnly
+                  size="sm"
+                  variant="secondary"
+                  aria-label="Lab settings"
+                  title="Lab settings"
+                  aria-expanded={labOpen}
+                  aria-controls="labSettingsPanel"
+                  className="lab-settings-trigger"
+                  onClick={() => setLabOpen(v => !v)}
+                  Icon={
+                    <span className="wm-experiment" aria-hidden="true" style={{ color: '#545E6B' }} />
+                  }
+                />
               </div>
             </WuFooter>
           </div>
         </WuSidebar>
+        <LabSettingsPanel open={labOpen} onClose={() => setLabOpen(false)} />
       </div>
     </div>
   );

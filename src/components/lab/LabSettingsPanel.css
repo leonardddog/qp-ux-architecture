@@ -1,0 +1,248 @@
+:root {
+  --lab-panel-width: 300px;
+}
+
+.lab-settings-panel {
+  --panel-bg: #303030;
+  --panel-surface: #3a3a3a;
+  --panel-surface-hover: #444444;
+  --panel-border: rgba(255, 255, 255, 0.14);
+  --panel-border-strong: rgba(255, 255, 255, 0.22);
+  --panel-text: #f2f2f2;
+  --panel-text-muted: #c4c4c4;
+  --panel-text-subtle: #9a9a9a;
+  --panel-accent: rgb(10, 134, 234);
+  --panel-accent-soft: rgba(10, 134, 234, 0.18);
+
+  font-family: "Roboto Mono", monospace;
+  font-size: 13px;
+  line-height: 1.4;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  width: var(--lab-panel-width);
+  border-left: 1px solid var(--panel-border-strong);
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
+.lab-settings-panel.is-open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-settings-panel {
+    transition: none;
+  }
+}
+
+/* Push content — desktop */
+body {
+  transition: padding-right 0.25s ease;
+}
+
+body.lab-settings-panel-open {
+  padding-right: var(--lab-panel-width);
+}
+
+/* Also shift sticky header / WuFooter if they are positioned - keeps parity with resex which shifts header/footer/progress */
+body.lab-settings-panel-open .wu-sticky {
+  /* header is wu-sticky wu-top-0, footer is wu-sticky wu-bottom-0 inside inset */
+  /* no extra right needed when using body padding, but resex also did right offset for fixed elements */
+}
+
+@media (max-width: 900px) {
+  body.lab-settings-panel-open {
+    padding-right: 0;
+  }
+
+  .lab-settings-panel {
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Header */
+.lab-settings-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 0 14px;
+  gap: 8px;
+}
+
+.lab-settings-panel__title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--panel-text-muted);
+  margin: 0;
+}
+
+.lab-settings-panel__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lab-settings-panel__icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--panel-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lab-settings-panel__icon-btn:hover {
+  background: var(--panel-accent-soft);
+  color: var(--panel-text);
+}
+
+/* Controls bar */
+.lab-settings-panel__controls {
+  padding: 4px 14px 14px 14px;
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.lab-settings-panel__control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-settings-panel__control-label {
+  font-size: 12px;
+  color: var(--panel-text-muted);
+}
+
+/* Body */
+.lab-settings-panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.lab-settings-panel__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lab-settings-panel__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+}
+
+.lab-settings-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-settings-panel__section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--panel-text-subtle);
+  margin: 0 0 4px 0;
+}
+
+.lab-settings-panel__placeholder {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+  color: var(--panel-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Toggle - iOS switch from resex */
+.lab-settings-toggle {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: #5a5a5a;
+  border: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.lab-settings-toggle::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 3px;
+  left: 3px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s ease;
+}
+
+.lab-settings-toggle:checked {
+  background: var(--panel-accent);
+}
+
+.lab-settings-toggle:checked::after {
+  transform: translateX(14px);
+}
+
+.lab-settings-toggle:indeterminate {
+  background: #6f8498;
+}
+
+.lab-settings-toggle:indeterminate::after {
+  transform: translateX(7px);
+}
+
+/* List / drag placeholder from resex */
+.lab-settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-settings-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+  color: var(--panel-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lab-settings-item:hover {
+  background: var(--panel-surface-hover);
+  border-color: var(--panel-border-strong);
+}

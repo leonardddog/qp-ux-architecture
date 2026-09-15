@@ -23,9 +23,38 @@ src/
   store/       → Redux (index, slices/counterSlice, hooks)
 ```
 
+## Getting started (local install)
+
+Prerequisites: Node.js 20.19+ (or 22.12+) and `pnpm` 9+.
+
+```bash
+# 1. Clone and enter the project
+git clone <repo-url>
+cd qp-ux-architecture
+
+# 2. Install pnpm (skip if you already have it) and install dependencies
+npm install -g pnpm
+pnpm --version # should show 9+
+pnpm install
+
+# 3. Configure env
+cp .env.example .env
+
+# 4. Start dev server (http://localhost:3000)
+pnpm dev
+```
+
+Build / preview a production build:
+
+```bash
+pnpm build
+pnpm preview # http://localhost:4173
+```
+
 ## Scripts
 
 ```bash
+pnpm install    # install dependencies
 pnpm dev        # start dev server :3000
 pnpm build      # tsc + vite build
 pnpm preview

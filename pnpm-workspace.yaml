@@ -1,3 +1,3 @@
 allowBuilds:
-  chromium: set this to true or false
+  chromium: true
   esbuild: true

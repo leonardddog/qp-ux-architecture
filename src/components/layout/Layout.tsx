@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   WuAppHeader,
   WuButton,
@@ -13,6 +13,7 @@ import {
 } from '@npm-questionpro/wick-ui-lib';
 import { WorkspaceAvatar } from '@/components/common/WorkspaceAvatar';
 import { LabSettingsPanel } from '../lab/LabSettingsPanel';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const categories = [
   {
@@ -36,6 +37,11 @@ const navItems = [
 
 export function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [studiesApproach, setStudiesApproach] = useLocalStorage<'default' | 'unified'>(
+    'lab-studies-approach',
+    'default',
+  );
   const [labOpen, setLabOpen] = useState<boolean>(() => {
     try {
       return localStorage.getItem('lab-settings-open') === '1';
@@ -61,6 +67,12 @@ export function Layout() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [labOpen]);
+
+  const handleStudiesApproachChange = (value: 'default' | 'unified') => {
+    if (value === studiesApproach) return;
+    setStudiesApproach(value);
+    if (location.pathname !== '/') navigate('/');
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -108,20 +120,54 @@ export function Layout() {
                 </div>
 
 
-                <WuSidebarGroup label="Resources">
-                  <WuSidebarMenu>
-                    <WuSidebarItem Icon={<span className="wc-document" aria-hidden="true" />}>
-                      <a href="https://wick-ui.questionpro.com" target="_blank" rel="noreferrer">
-                        WickUI Docs
-                      </a>
-                    </WuSidebarItem>
-                    <WuSidebarItem Icon={<span className="wc-analytics" aria-hidden="true" />}>
-                      <a href="https://questionpro.com" target="_blank" rel="noreferrer">
-                        QuestionPro
-                      </a>
-                    </WuSidebarItem>
-                  </WuSidebarMenu>
-                </WuSidebarGroup>
+                {studiesApproach === 'unified' ? (
+                  <WuSidebarGroup label="Research">
+                    <WuSidebarMenu>
+                      <WuSidebarItem
+                        Icon={<span className="wm-book-4" aria-hidden="true" />}
+                        isActive={location.pathname === '/studies'}
+                      >
+                        <Link to="/studies">Studies</Link>
+                      </WuSidebarItem>
+                    </WuSidebarMenu>
+                  </WuSidebarGroup>
+                ) : (
+                  <>
+                    <WuSidebarGroup label="Experience">
+                      <WuSidebarMenu>
+                        <WuSidebarItem
+                          Icon={<span className="wm-trackpad-input" aria-hidden="true" />}
+                          isActive={location.pathname === '/usability-tests'}
+                        >
+                          <Link to="/usability-tests">Usability tests</Link>
+                        </WuSidebarItem>
+                      </WuSidebarMenu>
+                    </WuSidebarGroup>
+
+                    <WuSidebarGroup label="Research">
+                      <WuSidebarMenu>
+                        <WuSidebarItem
+                          Icon={<span className="wm-forum" aria-hidden="true" />}
+                          isActive={location.pathname === '/interviews'}
+                        >
+                          <Link to="/interviews">Interviews</Link>
+                        </WuSidebarItem>
+                        <WuSidebarItem
+                          Icon={<span className="wm-groups-2" aria-hidden="true" />}
+                          isActive={location.pathname === '/focus-groups'}
+                        >
+                          <Link to="/focus-groups">Focus groups</Link>
+                        </WuSidebarItem>
+                        <WuSidebarItem
+                          Icon={<span className="wm-clinical-notes" aria-hidden="true" />}
+                          isActive={location.pathname === '/diaries'}
+                        >
+                          <Link to="/diaries">Diaries</Link>
+                        </WuSidebarItem>
+                      </WuSidebarMenu>
+                    </WuSidebarGroup>
+                  </>
+                )}
               </WuSidebarContent>
 
               <WuSidebarFooter>
@@ -170,7 +216,12 @@ export function Layout() {
             </WuFooter>
           </div>
         </WuSidebar>
-        <LabSettingsPanel open={labOpen} onClose={() => setLabOpen(false)} />
+        <LabSettingsPanel
+          open={labOpen}
+          onClose={() => setLabOpen(false)}
+          studiesApproach={studiesApproach}
+          onStudiesApproachChange={handleStudiesApproachChange}
+        />
       </div>
     </div>
   );

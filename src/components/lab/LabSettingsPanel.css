@@ -246,3 +246,18 @@ body.lab-settings-panel-open .wu-sticky {
   background: var(--panel-surface-hover);
   border-color: var(--panel-border-strong);
 }
+
+.lab-settings-item input[type='radio'] {
+  accent-color: var(--panel-accent);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.lab-settings-item__desc {
+  display: block;
+  font-size: 11px;
+  color: var(--panel-text-subtle);
+  margin-top: 2px;
+}

@@ -1,79 +1,80 @@
-import { WuCard, WuButton, WuHeading, WuText } from '@npm-questionpro/wick-ui-lib';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { increment, decrement, reset } from '@/store/slices/counterSlice';
+import { WuButton, WuHeading } from '@npm-questionpro/wick-ui-lib';
+import { Link } from 'react-router-dom';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { ActivitySection } from '@/components/home/ActivitySection';
+import { RecentlyOpenedCards } from '@/components/home/RecentlyOpenedCards';
+import { UpcomingEventsList } from '@/components/home/UpcomingSection';
+
+function PlaceholderSection({
+  title,
+  className,
+  fullWidth,
+}: {
+  title: string;
+  className?: string;
+  fullWidth?: boolean;
+}) {
+  return (
+    <section aria-label={title} className={['flex min-h-0 flex-col', className ?? ''].join(' ')}>
+      <div className="mb-3">
+        <WuHeading size="md" className="text-[#1b3380]">
+          {title}
+        </WuHeading>
+      </div>
+      <div
+        className={[
+          'flex-1 rounded-md border border-solid border-[rgba(27,51,128,0.16)] bg-[#dcecfa] p-6 text-sm text-[var(--wu-color-gray-subtle)]',
+          fullWidth ? 'w-full' : 'w-[80%]',
+        ].join(' ')}
+      >
+        Placeholder
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
-  const count = useAppSelector(s => s.counter.value);
-  const dispatch = useAppDispatch();
-
   return (
-    <div className="flex flex-col">
+    <div className="flex min-h-full flex-col lg:h-full lg:overflow-hidden">
       <SectionHeader
-        title="QP UX Architecture"
-        actions={<WuButton variant="primary">Get started</WuButton>}
-      />
-      <div className="mx-auto w-full max-w-5xl space-y-6 px-6 py-6">
-        <WuText size="md" className="text-[var(--wu-color-gray-subtle)]">
-          Reusable UX foundation powered by WickUI + Tailwind CSS · React 19 + Vite + Redux Toolkit
-        </WuText>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <WuCard>
-            <div className="p-6 space-y-4">
-              <WuHeading size="md">Redux Counter</WuHeading>
-              <WuText>Demonstrates Redux Toolkit slice integration.</WuText>
-              <div className="flex items-center gap-3">
-                <WuButton variant="secondary" onClick={() => dispatch(decrement())}>
-                  −
-                </WuButton>
-                <span className="min-w-12 text-center text-2xl font-semibold tabular-nums">
-                  {count}
-                </span>
-                <WuButton variant="primary" onClick={() => dispatch(increment())}>
-                  +
-                </WuButton>
-                <WuButton variant="outlined" onClick={() => dispatch(reset())} className="ml-auto">
-                  Reset
-                </WuButton>
-              </div>
-            </div>
-          </WuCard>
-
-          <WuCard>
-            <div className="p-6 space-y-3">
-              <WuHeading size="md">Styling stack</WuHeading>
-              <ul className="list-disc pl-5 text-sm leading-6 text-[var(--wu-color-gray-lead)]">
-                <li>
-                  <span className="font-medium">WickUI</span> – design tokens via{' '}
-                  <code className="rounded bg-gray-100 px-1">--wu-*</code> + components
-                </li>
-                <li>
-                  <span className="font-medium">Tailwind CSS 3.4</span> – utility layer on top of
-                  WickUI variables
-                </li>
-                <li>CSS Modules / custom overrides scoped where needed</li>
-              </ul>
-              <div className="flex gap-2">
-                <WuButton variant="outlined" size="sm">
-                  Docs
-                </WuButton>
-                <WuButton variant="primary" size="sm">
-                  Get started <span className="wc-analytics ml-1" aria-hidden />
-                </WuButton>
-              </div>
-            </div>
-          </WuCard>
-        </div>
-
-        <WuCard>
-          <div className="p-6">
-            <WuHeading size="sm">Environment</WuHeading>
-            <WuText size="sm" className="mt-1 font-mono text-xs">
-              VITE_API_URL = {import.meta.env.VITE_API_URL}
-            </WuText>
+        title="Your research at a glance"
+        actions={
+          <div className="flex items-center gap-2">
+            <Link to="/workspace">
+              <WuButton variant="secondary">Browse templates</WuButton>
+            </Link>
+            <Link to="/usability-tests">
+              <WuButton variant="primary">New study</WuButton>
+            </Link>
           </div>
-        </WuCard>
+        }
+      />
+
+      <div className="flex w-full flex-1 flex-col px-[var(--home-gutter)] pt-[var(--home-gutter)] lg:min-h-0">
+        <div className="grid flex-1 gap-[var(--home-gutter)] lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_clamp(300px,30%,350px)] min-[1500px]:grid-cols-[minmax(0,1fr)_clamp(300px,30%,403px)] min-[1700px]:grid-cols-[minmax(0,1fr)_clamp(300px,30%,560px)]">
+          <div className="thin-scroll flex min-w-0 flex-col gap-[var(--home-gutter)] lg:min-h-0 lg:overflow-auto lg:overscroll-contain lg:pb-[var(--home-gutter)]">
+            <RecentlyOpenedCards className="lg:h-[33%] lg:shrink-0" />
+            <div className="grid min-w-0 flex-1 grid-cols-2 gap-[var(--home-gutter)] lg:min-h-0">
+              <section aria-label="Upcoming events" className="flex min-h-0 flex-col">
+                <div className="mb-3">
+                  <WuHeading size="md" className="text-[#1b3380]">
+                    Upcoming events
+                  </WuHeading>
+                </div>
+                <div className="min-h-0 flex-1">
+                  <UpcomingEventsList />
+                </div>
+              </section>
+              <PlaceholderSection title="Another section" fullWidth />
+            </div>
+          </div>
+          <div className="flex min-w-0 gap-[var(--home-gutter)] lg:min-h-0">
+            <div aria-hidden="true" className="hidden w-px shrink-0 self-stretch bg-[rgba(27,51,128,0.08)] lg:block" />
+            <div className="flex min-w-0 flex-1 flex-col lg:min-h-0">
+              <ActivitySection />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

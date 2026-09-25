@@ -17,7 +17,7 @@ export function SectionHeader({ title, actions, className }: SectionHeaderProps)
         .filter(Boolean)
         .join(' ')}
     >
-      <h2 className="truncate text-[18px] font-medium leading-none text-[#545E6B]">{title}</h2>
+      <h2 className="truncate text-[18px] font-medium leading-[1.35] text-[#545E6B]">{title}</h2>
       {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
     </header>
   );

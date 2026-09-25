@@ -75,7 +75,8 @@ export function Layout() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col lg:h-screen">
+      {/* App shell: viewport-fixed height on desktop so the flex-1 chain (row > inset > main > page) resolves to definite heights and inner scroll areas stay bounded. Mobile keeps natural page flow. */}
       <WuAppHeader
         productName="QuestionPro UX"
         categories={categories}
@@ -195,7 +196,7 @@ export function Layout() {
               <Outlet />
             </main>
 
-            <WuFooter>
+            <WuFooter className="z-20">
               <div className="flex w-full items-center justify-between gap-2">
                 <span>QuestionPro UX · Information architecture © {new Date().getFullYear()}</span>
                 <WuButton

@@ -1,18 +1,11 @@
-import { useState } from 'react';
-
 interface WorkspaceAvatarProps {
   label?: string;
   bg?: string;
   pool?: number;
 }
 
-function getRandomQualitative(pool = 9): string {
-  const n = Math.floor(Math.random() * pool) + 1;
-  return `var(--wu-chart-qualitative-${n})`;
-}
-
-export function WorkspaceAvatar({ label = 'W', bg, pool = 9 }: WorkspaceAvatarProps) {
-  const [randomBg] = useState(() => bg ?? getRandomQualitative(pool));
+export function WorkspaceAvatar({ label = 'W', bg }: WorkspaceAvatarProps) {
+  const background = bg ?? 'var(--wu-chart-qualitative-11)';
 
   return (
     <span
@@ -23,7 +16,7 @@ export function WorkspaceAvatar({ label = 'W', bg, pool = 9 }: WorkspaceAvatarPr
         minWidth: 20,
         minHeight: 20,
         borderRadius: 2,
-        background: randomBg,
+        background: background,
         color: '#fff',
         display: 'inline-flex',
         alignItems: 'center',
